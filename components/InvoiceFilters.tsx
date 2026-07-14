@@ -42,6 +42,7 @@ export function InvoiceFilters({
       <p className="mt-1 text-sm text-slate-400" aria-live="polite">
         {formatInvoiceResultCount(visibleCount, totalCount)}
       </p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <label className="mt-4 block text-sm text-slate-300">
         <span className="mb-2 block">Search</span>
         <input
@@ -100,6 +101,7 @@ export function InvoiceFilters({
           <option value="status">Status</option>
         </select>
       </label>
+      </div>
       <button
         type="button"
         onClick={() => onChange({
