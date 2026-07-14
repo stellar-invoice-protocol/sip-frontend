@@ -12,3 +12,9 @@ export const DEFAULT_INVOICE_QUERY: InvoiceQuery = {
 function normalize(value: string): string {
   return value.trim().toLocaleLowerCase();
 }
+
+export function matchesInvoiceSearch(invoice: Invoice, search: string): boolean {
+  const term = normalize(search);
+
+  return !term || normalize(invoice.id).includes(term);
+}
