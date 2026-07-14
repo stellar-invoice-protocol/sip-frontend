@@ -18,6 +18,12 @@ export function matchesInvoiceSearch(invoice: Invoice, search: string): boolean 
 
   if (!term) return true;
 
-  return [invoice.id, invoice.issuer, invoice.payer]
+  return [
+    invoice.id,
+    invoice.issuer,
+    invoice.payer,
+    invoice.currency,
+    invoice.description ?? '',
+  ]
     .some((value) => normalize(value).includes(term));
 }
