@@ -108,3 +108,17 @@ export function formatInvoiceResultCount(visible: number, total: number): string
 
   return visible + ' of ' + total + ' invoices';
 }
+
+export function serializeInvoiceQuery(query: InvoiceQuery): string {
+  const params = new URLSearchParams();
+
+  if (query.search.trim()) params.set('q', query.search.trim());
+  if (query.status !== 'all') params.set('status', query.status);
+  if (query.role !== 'all') params.set('role', query.role);
+  if (query.sortBy !== DEFAULT_INVOICE_QUERY.sortBy) params.set('sort', query.sortBy);
+  if (query.direction !== DEFAULT_INVOICE_QUERY.direction) {
+    params.set('direction', query.direction);
+  }
+
+  return params.toString();
+}
