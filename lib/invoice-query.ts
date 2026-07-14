@@ -8,3 +8,7 @@ export const DEFAULT_INVOICE_QUERY: InvoiceQuery = {
   sortBy: 'dueDate',
   direction: 'asc',
 };
+
+function normalize(value: string): string {
+  return value.trim().toLocaleLowerCase();
+}
