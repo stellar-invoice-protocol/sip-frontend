@@ -85,6 +85,16 @@ export function InvoiceFilters({
           <option value="status">Status</option>
         </select>
       </label>
+      <button
+        type="button"
+        onClick={() => onChange({
+          ...query,
+          direction: query.direction === 'asc' ? 'desc' : 'asc',
+        })}
+        className="mt-4 rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
+      >
+        {query.direction === 'asc' ? 'Ascending' : 'Descending'}
+      </button>
     </section>
   );
 }
