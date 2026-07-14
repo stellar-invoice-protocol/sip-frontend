@@ -100,3 +100,11 @@ export function countActiveInvoiceFilters(query: InvoiceQuery): number {
     + Number(query.status !== DEFAULT_INVOICE_QUERY.status)
     + Number(query.role !== DEFAULT_INVOICE_QUERY.role);
 }
+
+export function formatInvoiceResultCount(visible: number, total: number): string {
+  if (visible === total) {
+    return total + ' invoice' + (total === 1 ? '' : 's');
+  }
+
+  return visible + ' of ' + total + ' invoices';
+}
