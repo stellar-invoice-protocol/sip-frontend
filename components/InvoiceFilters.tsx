@@ -1,7 +1,10 @@
 'use client';
 
 import type { InvoiceQuery } from '../types/invoice-query';
-import { formatInvoiceResultCount } from '../lib/invoice-query';
+import {
+  DEFAULT_INVOICE_QUERY,
+  formatInvoiceResultCount,
+} from '../lib/invoice-query';
 
 const STATUSES: InvoiceQuery['status'][] = [
   'all',
@@ -98,6 +101,13 @@ export function InvoiceFilters({
         className="mt-4 rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
       >
         {query.direction === 'asc' ? 'Ascending' : 'Descending'}
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange(DEFAULT_INVOICE_QUERY)}
+        className="mt-4 px-4 py-2 text-sm font-semibold text-sky-300 transition hover:text-sky-200"
+      >
+        Clear filters
       </button>
     </section>
   );
