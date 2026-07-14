@@ -56,5 +56,6 @@ export function compareInvoices(
   sortBy: InvoiceQuery['sortBy'],
 ): number {
   if (sortBy === 'dueDate') return compareDates(left.dueDate, right.dueDate);
+  if (sortBy === 'createdAt') return compareDates(left.createdAt, right.createdAt);
   return 0;
 }
