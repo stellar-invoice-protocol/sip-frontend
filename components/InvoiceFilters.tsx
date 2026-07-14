@@ -69,6 +69,22 @@ export function InvoiceFilters({
           <option value="payer">Payable by me</option>
         </select>
       </label>
+      <label className="mt-4 block text-sm text-slate-300">
+        <span className="mb-2 block">Sort by</span>
+        <select
+          value={query.sortBy}
+          onChange={(event) => onChange({
+            ...query,
+            sortBy: event.target.value as InvoiceQuery['sortBy'],
+          })}
+          className="w-full rounded-2xl border-slate-700 bg-slate-950/80 text-slate-100 focus:border-sky-500 focus:ring-sky-500"
+        >
+          <option value="dueDate">Due date</option>
+          <option value="createdAt">Created date</option>
+          <option value="amount">Amount</option>
+          <option value="status">Status</option>
+        </select>
+      </label>
     </section>
   );
 }
