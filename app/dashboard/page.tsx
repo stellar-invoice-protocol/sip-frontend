@@ -9,6 +9,7 @@ import { useWallet } from '../../lib/useWallet';
 import { getInvoicesForAddress } from '../../lib/api';
 import {
   DEFAULT_INVOICE_QUERY,
+  parseInvoiceQuery,
   queryInvoices,
 } from '../../lib/invoice-query';
 import type { Invoice } from '../../types/invoice';
@@ -18,12 +19,18 @@ export default function DashboardPage() {
   const { address, available, loading, connect } = useWallet();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [query, setQuery] = useState<InvoiceQuery>(DEFAULT_INVOICE_QUERY);
+  const [queryReady, setQueryReady] = useState(false);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const visibleInvoices = useMemo(
     () => queryInvoices(invoices, query, address),
     [address, invoices, query],
   );
+
+  useEffect(() => {
+    setQuery(parseInvoiceQuery(new URLSearchParams(window.location.search)));
+    setQueryReady(true);
+  }, []);
 
   useEffect(() => {
     if (!address) {
