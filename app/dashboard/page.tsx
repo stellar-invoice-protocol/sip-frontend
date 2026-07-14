@@ -101,7 +101,16 @@ export default function DashboardPage() {
                     visibleCount={visibleInvoices.length}
                     totalCount={invoices.length}
                   />
-                  <InvoiceTable invoices={invoices} />
+                  {visibleInvoices.length > 0 ? (
+                    <InvoiceTable invoices={visibleInvoices} />
+                  ) : (
+                    <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-950/70 p-8 text-center">
+                      <p className="font-semibold text-slate-200">No invoices match this view</p>
+                      <p className="mt-2 text-sm text-slate-400">
+                        Adjust the search or clear the active filters to see more invoices.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
