@@ -57,5 +57,8 @@ export function compareInvoices(
 ): number {
   if (sortBy === 'dueDate') return compareDates(left.dueDate, right.dueDate);
   if (sortBy === 'createdAt') return compareDates(left.createdAt, right.createdAt);
+  if (sortBy === 'amount') {
+    return Number.parseFloat(left.amount) - Number.parseFloat(right.amount);
+  }
   return 0;
 }
