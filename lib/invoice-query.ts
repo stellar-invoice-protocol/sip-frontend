@@ -27,3 +27,10 @@ export function matchesInvoiceSearch(invoice: Invoice, search: string): boolean 
   ]
     .some((value) => normalize(value).includes(term));
 }
+
+export function matchesInvoiceStatus(
+  invoice: Invoice,
+  status: InvoiceQuery['status'],
+): boolean {
+  return status === 'all' || invoice.status === status;
+}
