@@ -94,3 +94,9 @@ export function queryInvoices(
       compareInvoices(left, right, query.sortBy, query.direction),
     );
 }
+
+export function countActiveInvoiceFilters(query: InvoiceQuery): number {
+  return Number(Boolean(query.search.trim()))
+    + Number(query.status !== DEFAULT_INVOICE_QUERY.status)
+    + Number(query.role !== DEFAULT_INVOICE_QUERY.role);
+}
