@@ -122,3 +122,22 @@ export function serializeInvoiceQuery(query: InvoiceQuery): string {
 
   return params.toString();
 }
+
+export function parseInvoiceQuery(params: URLSearchParams): InvoiceQuery {
+  const status = params.get('status');
+  const role = params.get('role');
+  const sortBy = params.get('sort');
+  const direction = params.get('direction');
+
+  return {
+    search: params.get('q') ?? '',
+    status: STATUS_ORDER.includes(status as Invoice['status'])
+      ? status as Invoice['status']
+      : 'all',
+    role: role === 'issuer' || role === 'payer' ? role : 'all',
+    sortBy: sortBy === 'createdAt' || sortBy === 'amount' || sortBy === 'status'
+      ? sortBy
+      : 'dueDate',
+    direction: direction === 'desc' ? 'desc' : 'asc',
+  };
+}
