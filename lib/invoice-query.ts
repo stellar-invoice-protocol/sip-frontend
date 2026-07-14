@@ -86,11 +86,11 @@ export function queryInvoices(
   query: InvoiceQuery,
   address?: string | null,
 ): Invoice[] {
-  return invoices
+  return [...invoices]
     .filter((invoice) => matchesInvoiceSearch(invoice, query.search))
     .filter((invoice) => matchesInvoiceStatus(invoice, query.status))
     .filter((invoice) => matchesInvoiceRole(invoice, query.role, address))
-    .toSorted((left, right) =>
+    .sort((left, right) =>
       compareInvoices(left, right, query.sortBy, query.direction),
     );
 }
