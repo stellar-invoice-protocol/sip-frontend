@@ -11,6 +11,7 @@ import {
   DEFAULT_INVOICE_QUERY,
   parseInvoiceQuery,
   queryInvoices,
+  serializeInvoiceQuery,
 } from '../../lib/invoice-query';
 import type { Invoice } from '../../types/invoice';
 import type { InvoiceQuery } from '../../types/invoice-query';
@@ -31,6 +32,16 @@ export default function DashboardPage() {
     setQuery(parseInvoiceQuery(new URLSearchParams(window.location.search)));
     setQueryReady(true);
   }, []);
+
+  useEffect(() => {
+    if (!queryReady) return;
+
+    const queryString = serializeInvoiceQuery(query);
+    const url = queryString
+      ? window.location.pathname + '?' + queryString
+      : window.location.pathname;
+    window.history.replaceState(null, '', url + window.location.hash);
+  }, [query, queryReady]);
 
   useEffect(() => {
     if (!address) {
