@@ -80,3 +80,17 @@ export function compareInvoices(
     ? left.id.localeCompare(right.id)
     : result * multiplier;
 }
+
+export function queryInvoices(
+  invoices: Invoice[],
+  query: InvoiceQuery,
+  address?: string | null,
+): Invoice[] {
+  return invoices
+    .filter((invoice) => matchesInvoiceSearch(invoice, query.search))
+    .filter((invoice) => matchesInvoiceStatus(invoice, query.status))
+    .filter((invoice) => matchesInvoiceRole(invoice, query.role, address))
+    .toSorted((left, right) =>
+      compareInvoices(left, right, query.sortBy, query.direction),
+    );
+}
