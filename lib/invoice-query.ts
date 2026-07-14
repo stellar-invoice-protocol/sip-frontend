@@ -1,6 +1,14 @@
 import type { Invoice } from '../types/invoice';
 import type { InvoiceQuery } from '../types/invoice-query';
 
+const STATUS_ORDER: Invoice['status'][] = [
+  'Created',
+  'PartiallyPaid',
+  'Paid',
+  'Overdue',
+  'Cancelled',
+];
+
 export const DEFAULT_INVOICE_QUERY: InvoiceQuery = {
   search: '',
   status: 'all',
@@ -59,6 +67,9 @@ export function compareInvoices(
   if (sortBy === 'createdAt') return compareDates(left.createdAt, right.createdAt);
   if (sortBy === 'amount') {
     return Number.parseFloat(left.amount) - Number.parseFloat(right.amount);
+  }
+  if (sortBy === 'status') {
+    return STATUS_ORDER.indexOf(left.status) - STATUS_ORDER.indexOf(right.status);
   }
   return 0;
 }
