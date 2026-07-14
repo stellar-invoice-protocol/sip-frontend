@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { InvoiceTable } from '../../components/InvoiceTable';
+import { InvoiceFilters } from '../../components/InvoiceFilters';
 import { StatusBadge } from '../../components/StatusBadge';
 import { useWallet } from '../../lib/useWallet';
 import { getInvoicesForAddress } from '../../lib/api';
@@ -93,7 +94,15 @@ export default function DashboardPage() {
                   No invoices found for this wallet address. Create the first invoice or verify an existing invoice by ID.
                 </div>
               ) : (
-                <InvoiceTable invoices={invoices} />
+                <div className="space-y-5">
+                  <InvoiceFilters
+                    query={query}
+                    onChange={setQuery}
+                    visibleCount={visibleInvoices.length}
+                    totalCount={invoices.length}
+                  />
+                  <InvoiceTable invoices={invoices} />
+                </div>
               )}
             </div>
           ) : (
