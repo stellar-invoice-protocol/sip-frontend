@@ -16,5 +16,8 @@ function normalize(value: string): string {
 export function matchesInvoiceSearch(invoice: Invoice, search: string): boolean {
   const term = normalize(search);
 
-  return !term || normalize(invoice.id).includes(term);
+  if (!term) return true;
+
+  return [invoice.id, invoice.issuer, invoice.payer]
+    .some((value) => normalize(value).includes(term));
 }
