@@ -2,6 +2,7 @@
 
 import type { InvoiceQuery } from '../types/invoice-query';
 import {
+  countActiveInvoiceFilters,
   DEFAULT_INVOICE_QUERY,
   formatInvoiceResultCount,
 } from '../lib/invoice-query';
@@ -30,7 +31,14 @@ export function InvoiceFilters({
 }: InvoiceFiltersProps) {
   return (
     <section className="rounded-3xl border border-slate-800 bg-slate-900/30 p-5">
-      <h3 className="text-base font-semibold text-slate-100">Find invoices</h3>
+      <div className="flex items-center gap-3">
+        <h3 className="text-base font-semibold text-slate-100">Find invoices</h3>
+        {countActiveInvoiceFilters(query) > 0 ? (
+          <span className="rounded-full bg-sky-500/10 px-2.5 py-1 text-xs font-semibold text-sky-200 ring-1 ring-inset ring-sky-500/30">
+            {countActiveInvoiceFilters(query)} active
+          </span>
+        ) : null}
+      </div>
       <p className="mt-1 text-sm text-slate-400" aria-live="polite">
         {formatInvoiceResultCount(visibleCount, totalCount)}
       </p>
