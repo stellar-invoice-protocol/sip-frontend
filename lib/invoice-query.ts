@@ -34,3 +34,14 @@ export function matchesInvoiceStatus(
 ): boolean {
   return status === 'all' || invoice.status === status;
 }
+
+export function matchesInvoiceRole(
+  invoice: Invoice,
+  role: InvoiceQuery['role'],
+  address?: string | null,
+): boolean {
+  if (role === 'all') return true;
+  if (!address) return false;
+
+  return normalize(invoice[role]) === normalize(address);
+}
