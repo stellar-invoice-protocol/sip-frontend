@@ -1,18 +1,47 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { InvoiceTable } from '../../components/InvoiceTable';
+import { InvoiceFilters } from '../../components/InvoiceFilters';
 import { StatusBadge } from '../../components/StatusBadge';
 import { useWallet } from '../../lib/useWallet';
 import { getInvoicesForAddress } from '../../lib/api';
+import {
+  DEFAULT_INVOICE_QUERY,
+  parseInvoiceQuery,
+  queryInvoices,
+  serializeInvoiceQuery,
+} from '../../lib/invoice-query';
 import type { Invoice } from '../../types/invoice';
+import type { InvoiceQuery } from '../../types/invoice-query';
 
 export default function DashboardPage() {
   const { address, available, loading, connect } = useWallet();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [query, setQuery] = useState<InvoiceQuery>(DEFAULT_INVOICE_QUERY);
+  const [queryReady, setQueryReady] = useState(false);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const visibleInvoices = useMemo(
+    () => queryInvoices(invoices, query, address),
+    [address, invoices, query],
+  );
+
+  useEffect(() => {
+    setQuery(parseInvoiceQuery(new URLSearchParams(window.location.search)));
+    setQueryReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!queryReady) return;
+
+    const queryString = serializeInvoiceQuery(query);
+    const url = queryString
+      ? window.location.pathname + '?' + queryString
+      : window.location.pathname;
+    window.history.replaceState(null, '', url + window.location.hash);
+  }, [query, queryReady]);
 
   useEffect(() => {
     if (!address) {
@@ -83,7 +112,24 @@ export default function DashboardPage() {
                   No invoices found for this wallet address. Create the first invoice or verify an existing invoice by ID.
                 </div>
               ) : (
-                <InvoiceTable invoices={invoices} />
+                <div className="space-y-5">
+                  <InvoiceFilters
+                    query={query}
+                    onChange={setQuery}
+                    visibleCount={visibleInvoices.length}
+                    totalCount={invoices.length}
+                  />
+                  {visibleInvoices.length > 0 ? (
+                    <InvoiceTable invoices={visibleInvoices} />
+                  ) : (
+                    <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-950/70 p-8 text-center">
+                      <p className="font-semibold text-slate-200">No invoices match this view</p>
+                      <p className="mt-2 text-sm text-slate-400">
+                        Adjust the search or clear the active filters to see more invoices.
+                      </p>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           ) : (

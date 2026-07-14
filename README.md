@@ -13,6 +13,13 @@ This repository contains the Next.js 15 frontend dashboard, featuring full TypeS
 - **Soroban Integration:** Transparent smart contract transaction triggers prepared directly on-chain for execution.
 - **Public Verification:** Share standalone public URLs with clients to verify payment statuses and cryptographic settlement proofs without requiring wallet connection.
 - **Dark Mode Native:** Clean, modular, card-based interface optimized for both light and dark systems.
+- **Invoice Finder:** Search invoice metadata, filter by status or wallet role, sort results, and share the current dashboard view through its URL.
+
+### Invoice Finder
+
+Connect a wallet and open `/dashboard` to use the finder. Search matches invoice IDs,
+issuer and payer addresses, currencies, and descriptions. Non-default filters and
+sorting choices are stored in the URL, so a focused view can be bookmarked or shared.
 
 ---
 
