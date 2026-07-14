@@ -54,6 +54,21 @@ export function InvoiceFilters({
           ))}
         </select>
       </label>
+      <label className="mt-4 block text-sm text-slate-300">
+        <span className="mb-2 block">Wallet role</span>
+        <select
+          value={query.role}
+          onChange={(event) => onChange({
+            ...query,
+            role: event.target.value as InvoiceQuery['role'],
+          })}
+          className="w-full rounded-2xl border-slate-700 bg-slate-950/80 text-slate-100 focus:border-sky-500 focus:ring-sky-500"
+        >
+          <option value="all">Issuer or payer</option>
+          <option value="issuer">Issued by me</option>
+          <option value="payer">Payable by me</option>
+        </select>
+      </label>
     </section>
   );
 }
