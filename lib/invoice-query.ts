@@ -65,14 +65,18 @@ export function compareInvoices(
   direction: InvoiceQuery['direction'] = 'asc',
 ): number {
   const multiplier = direction === 'asc' ? 1 : -1;
+  let result = 0;
 
-  if (sortBy === 'dueDate') return compareDates(left.dueDate, right.dueDate) * multiplier;
-  if (sortBy === 'createdAt') return compareDates(left.createdAt, right.createdAt) * multiplier;
+  if (sortBy === 'dueDate') result = compareDates(left.dueDate, right.dueDate);
+  if (sortBy === 'createdAt') result = compareDates(left.createdAt, right.createdAt);
   if (sortBy === 'amount') {
-    return (Number.parseFloat(left.amount) - Number.parseFloat(right.amount)) * multiplier;
+    result = Number.parseFloat(left.amount) - Number.parseFloat(right.amount);
   }
   if (sortBy === 'status') {
-    return (STATUS_ORDER.indexOf(left.status) - STATUS_ORDER.indexOf(right.status)) * multiplier;
+    result = STATUS_ORDER.indexOf(left.status) - STATUS_ORDER.indexOf(right.status);
   }
-  return 0;
+
+  return result === 0
+    ? left.id.localeCompare(right.id)
+    : result * multiplier;
 }
