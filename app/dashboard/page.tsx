@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { InvoiceTable } from '../../components/InvoiceTable';
 import { StatusBadge } from '../../components/StatusBadge';
 import { useWallet } from '../../lib/useWallet';
 import { getInvoicesForAddress } from '../../lib/api';
-import { DEFAULT_INVOICE_QUERY } from '../../lib/invoice-query';
+import {
+  DEFAULT_INVOICE_QUERY,
+  queryInvoices,
+} from '../../lib/invoice-query';
 import type { Invoice } from '../../types/invoice';
 import type { InvoiceQuery } from '../../types/invoice-query';
 
@@ -16,6 +19,10 @@ export default function DashboardPage() {
   const [query, setQuery] = useState<InvoiceQuery>(DEFAULT_INVOICE_QUERY);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const visibleInvoices = useMemo(
+    () => queryInvoices(invoices, query, address),
+    [address, invoices, query],
+  );
 
   useEffect(() => {
     if (!address) {
