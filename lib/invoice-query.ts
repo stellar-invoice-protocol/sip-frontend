@@ -45,3 +45,16 @@ export function matchesInvoiceRole(
 
   return normalize(invoice[role]) === normalize(address);
 }
+
+function compareDates(left: string, right: string): number {
+  return new Date(left).getTime() - new Date(right).getTime();
+}
+
+export function compareInvoices(
+  left: Invoice,
+  right: Invoice,
+  sortBy: InvoiceQuery['sortBy'],
+): number {
+  if (sortBy === 'dueDate') return compareDates(left.dueDate, right.dueDate);
+  return 0;
+}
