@@ -1,67 +1,55 @@
 import type { Invoice } from '../types/invoice';
-
-let freighterApi: any = null;
+import {
+  getAddress,
+  isConnected,
+  requestAccess,
+  signTransaction,
+} from '@stellar/freighter-api';
 
 export function isFreighterAvailable(): boolean {
-  return typeof window !== 'undefined' && typeof (window as any).freighterApi !== 'undefined';
-}
-
-export async function ensureFreighter(): Promise<any> {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  if (freighterApi) {
-    return freighterApi;
-  }
-
-  try {
-    const freighterModule = await import('@stellar/freighter-api');
-    if (freighterModule?.FreighterApi) {
-      freighterApi = new freighterModule.FreighterApi();
-    } else if ((window as any).freighterApi) {
-      freighterApi = (window as any).freighterApi;
-    }
-  } catch {
-    freighterApi = (window as any).freighterApi;
-  }
-
-  return freighterApi;
+  return typeof window !== 'undefined' && typeof (window as any).freighter !== 'undefined';
 }
 
 export async function connectWallet(): Promise<string> {
-  const api = await ensureFreighter();
-
-  if (!api || typeof api.getPublicKey !== 'function') {
-    throw new Error('Freighter wallet is not available. Install the extension and refresh the page.');
+  // Check if the Freighter extension is connected/accessible
+  const connected = await isConnected();
+  if (!connected?.isConnected) {
+    // Try to request access first (prompts the extension)
+    const access = await requestAccess();
+    if (access?.error) {
+      throw new Error(
+        access.error.message ??
+          'Freighter wallet is not available. Install the extension and refresh the page.',
+      );
+    }
   }
 
-  const publicKey = await api.getPublicKey();
-
-  if (typeof publicKey === 'string') {
-    return publicKey;
+  const result = await getAddress();
+  if (result?.error) {
+    throw new Error(result.error.message ?? 'Unable to retrieve wallet address from Freighter.');
   }
 
-  return publicKey.publicKey ?? publicKey.accountId ?? String(publicKey);
+  return result.address;
 }
 
 export async function signInvoiceTransaction(invoice: Invoice): Promise<string> {
-  const api = await ensureFreighter();
-
-  if (!api || typeof api.signTransaction !== 'function') {
+  const connected = await isConnected();
+  if (!connected?.isConnected) {
     throw new Error('Freighter signing is not available.');
   }
 
   const transactionXdr = prepareInvoiceTransaction(invoice);
   const networkPassphrase = 'Test SDF Network ; September 2015';
 
-  const signed = await api.signTransaction(transactionXdr, networkPassphrase);
+  const result = await signTransaction(transactionXdr, {
+    networkPassphrase,
+  });
 
-  if (signed?.signature) {
-    return signed.signature;
+  if (result?.error) {
+    throw new Error(result.error.message ?? 'Transaction signing failed.');
   }
 
-  return String(signed);
+  return result.signedTxXdr ?? String(result);
 }
 
 export function prepareInvoiceTransaction(invoice: Invoice): string {

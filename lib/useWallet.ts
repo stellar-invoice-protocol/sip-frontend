@@ -21,7 +21,7 @@ export function useWallet() {
     }
   }, []);
 
-  const connect = async () => {
+  const connect = async (): Promise<string | null> => {
     setLoading(true);
     setError(null);
 
@@ -32,8 +32,10 @@ export function useWallet() {
         window.localStorage.setItem(STORAGE_KEY, publicKey);
       }
       setAvailable(true);
+      return publicKey;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to connect wallet');
+      return null;
     } finally {
       setLoading(false);
     }

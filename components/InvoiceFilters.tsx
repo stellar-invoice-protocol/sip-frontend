@@ -43,7 +43,7 @@ export function InvoiceFilters({
         {formatInvoiceResultCount(visibleCount, totalCount)}
       </p>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <label className="mt-4 block text-sm text-slate-300">
+      <label className="block text-sm text-slate-300">
         <span className="mb-2 block">Search</span>
         <input
           type="search"
@@ -53,7 +53,7 @@ export function InvoiceFilters({
           className="w-full rounded-2xl border-slate-700 bg-slate-950/80 text-slate-100 placeholder:text-slate-500 focus:border-sky-500 focus:ring-sky-500"
         />
       </label>
-      <label className="mt-4 block text-sm text-slate-300">
+      <label className="block text-sm text-slate-300">
         <span className="mb-2 block">Status</span>
         <select
           value={query.status}
@@ -70,7 +70,7 @@ export function InvoiceFilters({
           ))}
         </select>
       </label>
-      <label className="mt-4 block text-sm text-slate-300">
+      <label className="block text-sm text-slate-300">
         <span className="mb-2 block">Wallet role</span>
         <select
           value={query.role}
@@ -85,7 +85,7 @@ export function InvoiceFilters({
           <option value="payer">Payable by me</option>
         </select>
       </label>
-      <label className="mt-4 block text-sm text-slate-300">
+      <label className="block text-sm text-slate-300">
         <span className="mb-2 block">Sort by</span>
         <select
           value={query.sortBy}
