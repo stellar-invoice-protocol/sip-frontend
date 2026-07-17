@@ -27,9 +27,9 @@ export function WalletStatus({ onConnect }: { onConnect?: (address: string) => v
             <button
               type="button"
               onClick={async () => {
-                await connect();
-                if (onConnect && address) {
-                  onConnect(address);
+                const key = await connect();
+                if (onConnect && key) {
+                  onConnect(key);
                 }
               }}
               disabled={!available || loading}
