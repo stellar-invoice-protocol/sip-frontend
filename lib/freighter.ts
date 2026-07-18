@@ -7,14 +7,14 @@ import {
 } from '@stellar/freighter-api';
 
 export function isFreighterAvailable(): boolean {
-  return typeof window !== 'undefined' && typeof (window as any).freighter !== 'undefined';
+  return typeof window !== 'undefined' && typeof (window as any).freighterApi !== 'undefined';
 }
 
 export async function connectWallet(): Promise<string> {
   // Check if the Freighter extension is connected/accessible
   const connected = await isConnected();
   if (!connected?.isConnected) {
-    // Try to request access first (prompts the extension)
+    // Prompt the user to grant access
     const access = await requestAccess();
     if (access?.error) {
       throw new Error(
@@ -22,11 +22,23 @@ export async function connectWallet(): Promise<string> {
           'Freighter wallet is not available. Install the extension and refresh the page.',
       );
     }
+
+    // Verify the user actually approved (not just closed the popup)
+    const recheck = await isConnected();
+    if (!recheck?.isConnected) {
+      throw new Error(
+        'Freighter access was not granted. Please approve the connection in the extension.',
+      );
+    }
   }
 
   const result = await getAddress();
   if (result?.error) {
     throw new Error(result.error.message ?? 'Unable to retrieve wallet address from Freighter.');
+  }
+
+  if (!result.address) {
+    throw new Error('Freighter returned an empty address. Make sure your wallet is unlocked.');
   }
 
   return result.address;
