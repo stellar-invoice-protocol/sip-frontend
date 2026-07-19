@@ -23,6 +23,7 @@ export default function DashboardPage() {
   const [queryReady, setQueryReady] = useState(false);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [connectError, setConnectError] = useState<string | null>(null);
   const visibleInvoices = useMemo(
     () => queryInvoices(invoices, query, address),
     [address, invoices, query],
@@ -72,14 +73,25 @@ export default function DashboardPage() {
               Create invoice
             </Link>
             {!address ? (
-              <button
-                type="button"
-                onClick={connect}
-                disabled={!available || loading}
-                className="rounded-full bg-slate-800 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {loading ? 'Connecting...' : 'Connect Wallet'}
-              </button>
+              <div className="flex flex-col items-start gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setConnectError(null);
+                    const key = await connect();
+                    if (!key) {
+                      setConnectError('Unable to connect wallet. Check Freighter is installed and unlocked.');
+                    }
+                  }}
+                  disabled={!available || loading}
+                  className="rounded-full bg-slate-800 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {loading ? 'Connecting...' : 'Connect Wallet'}
+                </button>
+                {connectError ? (
+                  <p className="text-xs text-rose-300">{connectError}</p>
+                ) : null}
+              </div>
             ) : (
               <div className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-slate-100">{address}</div>
             )}
